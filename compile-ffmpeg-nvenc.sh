@@ -1,11 +1,11 @@
 #!/bin/bash
 
-#This script will hopefully install ffmpeg with support for nvenc un ubuntu.
-#Cross your fingers.
+#This script will compile and install a static ffmpeg build with support for nvenc un ubuntu.
+#See the prefix path and compile options if edits are needed to suit your needs.
 
 #install required things from apt
 installLibs(){
-echo "Installing prerequosites"
+echo "Installing prerequisites"
 sudo apt-get update
 sudo apt-get -y --force-yes install autoconf automake build-essential libass-dev libfreetype6-dev libgpac-dev \
   libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
