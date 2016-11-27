@@ -32,9 +32,9 @@ wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
 tar xzvf yasm-1.3.0.tar.gz
 cd yasm-1.3.0
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
-make
-make install
-make distclean
+make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 }
 
 #Compile libx264
@@ -45,9 +45,9 @@ wget http://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
 tar xjvf last_x264.tar.bz2
 cd x264-snapshot*
 PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static
-PATH="$HOME/bin:$PATH" make
-make install
-make distclean
+PATH="$HOME/bin:$PATH" make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 }
 
 #Compile libfdk-acc
@@ -60,9 +60,9 @@ unzip fdk-aac.zip
 cd mstorsjo-fdk-aac*
 autoreconf -fiv
 ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
-make
-make install
-make distclean
+make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 }
 
 #Compile libmp3lame
@@ -74,35 +74,35 @@ wget http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz
 tar xzvf lame-3.99.5.tar.gz
 cd lame-3.99.5
 ./configure --prefix="$HOME/ffmpeg_build" --enable-nasm --disable-shared
-make
-make install
-make distclean
+make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 }
 
 #Compile libopus
 compileLibOpus(){
 echo "Compiling libopus"
 cd ~/ffmpeg_sources
-wget http://downloads.xiph.org/releases/opus/opus-1.1.tar.gz
-tar xzvf opus-1.1.tar.gz
-cd opus-1.1
+wget http://downloads.xiph.org/releases/opus/opus-1.1.3.tar.gz
+tar xzvf opus-1.1.3.tar.gz
+cd opus-1.1.3
 ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
-make
-make install
-make distclean
+make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 }
 
 #Compile libvpx
 compileLibPvx(){
 echo "Compiling libvpx"
 cd ~/ffmpeg_sources
-wget http://webm.googlecode.com/files/libvpx-v1.3.0.tar.bz2
-tar xjvf libvpx-v1.3.0.tar.bz2
-cd libvpx-v1.3.0
+wget storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.6.0.tar.bz2
+tar xjvf libvpx-v1.6.0.tar.bz2
+cd libvpx-v1.6.0
 PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples
-PATH="$HOME/bin:$PATH" make
-make install
-make clean
+PATH="$HOME/bin:$PATH" make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) clean
 }
 
 #Compile ffmpeg
@@ -120,6 +120,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
+  --enable-vaapi \
   --enable-libfreetype \
   --enable-libmp3lame \
   --enable-libopus \
@@ -129,9 +130,9 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libx264 \
   --enable-nonfree \
   --enable-nvenc
-PATH="$HOME/bin:$PATH" make
-make install
-make distclean
+PATH="$HOME/bin:$PATH" make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
 hash -r
 }
 
