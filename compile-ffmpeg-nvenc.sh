@@ -12,25 +12,37 @@ sudo apt-get -y --force-yes install autoconf automake build-essential libass-dev
   libxcb-xfixes0-dev pkg-config texi2html zlib1g-dev
 }
 
+#install CUDA SDK
+InstallCUDASDK(){
+echo "Installing CUDA and the latest driver repositories from repositories"
+cd ~/ffmpeg_sources
+wget -c -v -nc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.2.88-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1604_9.2.88-1_amd64.deb
+sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+sudo apt-get -y update
+sudo apt-get -y install cuda
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update && sudo apt-get -y upgrade
+}
+
 #Install nvidia SDK
 installSDK(){
 echo "Installing the nVidia NVENC SDK."
 cd ~/ffmpeg_sources
-mkdir SDK
-cd SDK
-wget http://developer.download.nvidia.com/compute/nvenc/v5.0/nvenc_5.0.1_sdk.zip -O sdk.zip
-unzip sdk.zip
-cd nvenc_5.0.1_sdk
-sudo cp Samples/common/inc/* /usr/include/
+cd ~/ffmpeg_sources
+git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+cd nv-codec-headers
+make
+sudo make install
 }
 
-#Compile yasm
-compileYasm(){
-echo "Compiling yasm"
+#Compile nasm
+compileNasm(){
+echo "Compiling nasm"
 cd ~/ffmpeg_sources
-wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
-tar xzvf yasm-1.3.0.tar.gz
-cd yasm-1.3.0
+wget http://www.nasm.us/pub/nasm/releasebuilds/2.14rc0/nasm-2.14rc0.tar.gz
+tar xzvf nasm-2.14rc0.tar.gz
+cd nasm-2.14rc0
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
 make -j$(nproc)
 make -j$(nproc) install
@@ -83,9 +95,9 @@ make -j$(nproc) distclean
 compileLibOpus(){
 echo "Compiling libopus"
 cd ~/ffmpeg_sources
-wget http://downloads.xiph.org/releases/opus/opus-1.1.3.tar.gz
-tar xzvf opus-1.1.3.tar.gz
-cd opus-1.1.3
+wget http://downloads.xiph.org/releases/opus/opus-1.2.1.tar.gz
+tar xzvf opus-1.2.1.tar.gz
+cd opus-1.2.1
 ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 make -j$(nproc)
 make -j$(nproc) install
@@ -96,10 +108,11 @@ make -j$(nproc) distclean
 compileLibPvx(){
 echo "Compiling libvpx"
 cd ~/ffmpeg_sources
-wget storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.6.0.tar.bz2
-tar xjvf libvpx-v1.6.0.tar.bz2
-cd libvpx-v1.6.0
-PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples
+git clone https://chromium.googlesource.com/webm/libvpx
+cd libvpx
+PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --disable-examples --enable-runtime-cpu-detect --enable-vp9 --enable-vp8 \
+--enable-postproc --enable-vp9-postproc --enable-multi-res-encoding --enable-webm-io --enable-better-hw-compatibility --enable-vp9-highbitdepth --enable-onthefly-bitpacking --enable-realtime-only \
+--cpu=native --as=nasm
 PATH="$HOME/bin:$PATH" make -j$(nproc)
 make -j$(nproc) install
 make -j$(nproc) clean
@@ -109,14 +122,18 @@ make -j$(nproc) clean
 compileFfmpeg(){
 echo "Compiling ffmpeg"
 cd ~/ffmpeg_sources
-wget http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
-tar xjvf ffmpeg-snapshot.tar.bz2
-cd ffmpeg
+git clone https://github.com/FFmpeg/FFmpeg -b master
+cd FFmpeg
 PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
   --prefix="$HOME/ffmpeg_build" \
   --extra-cflags="-I$HOME/ffmpeg_build/include" \
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --bindir="$HOME/bin" \
+  --enable-cuda-sdk \
+  --enable-cuvid \
+  --enable-libnpp \
+  --extra-cflags="-I/usr/local/cuda/include/" \
+  --extra-ldflags=-L/usr/local/cuda/lib64/ \
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
@@ -140,8 +157,9 @@ hash -r
 cd ~
 mkdir ffmpeg_sources
 installLibs
+InstallCUDASDK
 installSDK
-compileYasm
+compileNasm
 compileLibX264
 compileLibfdkcc
 compileLibMP3Lame
