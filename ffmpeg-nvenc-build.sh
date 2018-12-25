@@ -23,6 +23,8 @@ mkdir -p "$WORK_DIR" "$DEST_DIR" "$DEST_DIR/bin"
 
 export PATH="$DEST_DIR/bin:$PATH"
 
+MYDIR="$(cd "$(dirname "$0")" && pwd)"  #"
+
 ####  Routines  ################################################
 
 Wget() { wget -cN "$@"; }
@@ -88,7 +90,7 @@ installNvidiaSDK() {
     git pull
     make
     make install PREFIX="$DEST_DIR"
-    patch -d "$DEST_DIR" -p1 < "$(dirname "$0")/dynlink_cuda.h.patch"
+    patch --forward -d "$DEST_DIR" -p1 < "$MYDIR/dynlink_cuda.h.patch"
 }
 
 compileNasm() {
