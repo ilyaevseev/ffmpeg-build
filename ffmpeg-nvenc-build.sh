@@ -132,6 +132,7 @@ compileLibX265() {
         hg pull
         hg update
     else
+        cd "$WORK_DIR/"
         hg clone https://bitbucket.org/multicoreware/x265
     fi
 
