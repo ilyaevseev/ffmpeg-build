@@ -46,7 +46,10 @@ installYumLibs() {
 installLibs() {
     echo "Installing prerequisites"
     . /etc/os-release
-    if test "$ID" = "ubuntu"; then installAptLibs; else installYumLibs; fi
+    case "$ID" in
+        ubuntu | linuxmint ) installAptLibs ;;
+        * )                  installYumLibs ;;
+    esac
 }
 
 installCUDASDKdeb() {
@@ -58,7 +61,7 @@ installCUDASDKdeb() {
     sudo apt-get -y update
     sudo apt-get -y install cuda
 
-    sudo add-apt-repository -y ppa:graphics-drivers/ppa
+    sudo env LC_ALL=C.UTF-8 add-apt-repository -y ppa:graphics-drivers/ppa
     sudo apt-get -y update
     sudo apt-get -y upgrade
 }
@@ -77,6 +80,7 @@ installCUDASDK() {
     case "$ID-$VERSION_ID" in
         ubuntu-16.04 ) installCUDASDKdeb 1604 ;;
         ubuntu-18.04 ) installCUDASDKdeb 1804 ;;
+        linuxmint-19.1)installCUDASDKdeb 1804 ;;
         centos-7     ) installCUDASDKyum ;;
         * ) echo "ERROR: only CentOS 7, Ubuntu 16.04 or 18.04 are supported now."; exit 1;;
     esac
@@ -140,6 +144,9 @@ compileLibX265() {
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED:bool=off ../../source
     make -j$(nproc)
     make install
+
+    # forward declaration should not be used without struct keyword!
+    sed -i.orig -e 's,^ *x265_param\* zoneParam,struct x265_param* zoneParam,' "$DEST_DIR/include/x265.h"
 }
 
 compileLibAom() {
