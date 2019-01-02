@@ -29,18 +29,19 @@ MYDIR="$(cd "$(dirname "$0")" && pwd)"  #"
 
 Wget() { wget -cN "$@"; }
 
+PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
+
 installAptLibs() {
     sudo apt-get update
-    sudo apt-get -y --force-yes install autoconf automake build-essential libass-dev libfreetype6-dev libgpac-dev \
-      libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
-      libxcb-xfixes0-dev pkg-config texi2html zlib1g-dev \
-      wget software-properties-common unzip cmake mercurial
+    sudo apt-get -y --force-yes install $PKGS \
+      build-essential pkg-config texi2html software-properties-common \
+      libass-dev libfreetype6-dev libgpac-dev libsdl1.2-dev libtheora-dev libva-dev \
+      libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev zlib1g-dev
 }
 
 installYumLibs() {
-    sudo yum -y install autoconf automake bzip2 cmake freetype-devel gcc gcc-c++ git libtool make mercurial pkgconfig zlib-devel \
-      libass-devel tibtheora-devel libvorbis-devel libva-devel \
-      wget unzip cmake mercurial patch
+    sudo yum -y install $PKGS freetype-devel gcc gcc-c++ pkgconfig zlib-devel \
+      libass-devel tibtheora-devel libvorbis-devel libva-devel
 }
 
 installLibs() {
