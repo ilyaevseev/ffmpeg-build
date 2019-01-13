@@ -227,6 +227,7 @@ compileFfmpeg(){
       --extra-cflags="-I $DEST_DIR/include -I $CUDA_DIR/include/" \
       --extra-ldflags="-L $DEST_DIR/lib -L $CUDA_DIR/lib64/" \
       --extra-libs="-lpthread" \
+      --enable-cuda \
       --enable-cuda-sdk \
       --enable-cuvid \
       --enable-libnpp \
