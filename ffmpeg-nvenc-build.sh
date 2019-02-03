@@ -206,7 +206,7 @@ compileLibVpx() {
     ./configure --prefix="$DEST_DIR" --disable-examples --enable-runtime-cpu-detect --enable-vp9 --enable-vp8 \
     --enable-postproc --enable-vp9-postproc --enable-multi-res-encoding --enable-webm-io --enable-better-hw-compatibility \
     --enable-vp9-highbitdepth --enable-onthefly-bitpacking --enable-realtime-only \
-    --cpu=native --as=nasm
+    --cpu=native --as=nasm --disable-docs
     make -j$(nproc)
     make install clean
 }
