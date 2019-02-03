@@ -69,8 +69,8 @@ installCUDASDKdeb() {
 
 installCUDASDKyum() {
     rpm -q cuda-repo-rhel7 2>/dev/null ||
-       yum install -y "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-${CUDA_VERSION}.x86_64.rpm"
-    yum install -y cuda
+       sudo yum install -y "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-${CUDA_VERSION}.x86_64.rpm"
+    sudo yum install -y cuda
 }
 
 installCUDASDK() {
