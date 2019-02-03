@@ -41,7 +41,7 @@ installAptLibs() {
 
 installYumLibs() {
     sudo yum -y install $PKGS freetype-devel gcc gcc-c++ pkgconfig zlib-devel \
-      libass-devel tibtheora-devel libvorbis-devel libva-devel
+      libass-devel libtheora-devel libvorbis-devel libva-devel
 }
 
 installLibs() {
