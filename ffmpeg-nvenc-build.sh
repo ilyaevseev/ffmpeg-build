@@ -13,6 +13,7 @@ NASM_VERSION="2.14rc15"
 YASM_VERSION="1.3.0"
 LAME_VERSION="3.100"
 OPUS_VERSION="1.2.1"
+LASS_VERSION="0.14.0"
 CUDA_VERSION="10.0.130-1"
 CUDA_REPO_KEY="http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub"
 CUDA_DIR="/usr/local/cuda"
@@ -35,13 +36,13 @@ installAptLibs() {
     sudo apt-get update
     sudo apt-get -y --force-yes install $PKGS \
       build-essential pkg-config texi2html software-properties-common \
-      libass-dev libfreetype6-dev libgpac-dev libsdl1.2-dev libtheora-dev libva-dev \
+      libfreetype6-dev libgpac-dev libsdl1.2-dev libtheora-dev libva-dev \
       libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev zlib1g-dev
 }
 
 installYumLibs() {
     sudo yum -y install $PKGS freetype-devel gcc gcc-c++ pkgconfig zlib-devel \
-      libass-devel libtheora-devel libvorbis-devel libva-devel
+      libtheora-devel libvorbis-devel libva-devel
 }
 
 installLibs() {
@@ -212,6 +213,18 @@ compileLibVpx() {
     make install clean
 }
 
+compileLibAss() {
+    echo "Compiling libass"
+    cd "$WORK_DIR/"
+    Wget "https://github.com/libass/libass/releases/download/$LASS_VERSION/libass-$LASS_VERSION.tar.xz"
+    tar Jxvf "libass-$LASS_VERSION.tar.xz"
+    cd "libass-$LASS_VERSION"
+    autoreconf -fiv
+    ./configure --prefix="$DEST_DIR" --disable-shared
+    make -j$(nproc)
+    make install distclean
+}
+
 compileFfmpeg(){
     echo "Compiling ffmpeg"
     cd "$WORK_DIR/"
@@ -265,6 +278,7 @@ compileLibVpx
 compileLibfdkcc
 compileLibMP3Lame
 compileLibOpus
+compileLibAss
 # TODO: libogg
 # TODO: libvorbis
 compileFfmpeg
