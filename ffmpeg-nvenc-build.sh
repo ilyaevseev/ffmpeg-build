@@ -42,7 +42,7 @@ Clone() {
     git pull
 }
 
-PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
+PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial cmake3"
 
 installAptLibs() {
     sudo apt-get update
@@ -162,7 +162,8 @@ compileLibAom() {
     Clone https://aomedia.googlesource.com/aom
     mkdir ../aom_build
     cd ../aom_build
-    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED=off -DENABLE_NASM=on ../aom
+    which cmake3 && PROG=cmake3 || PROG=cmake
+    $PROG -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED=off -DENABLE_NASM=on ../aom
     Make install
 }
 
@@ -249,8 +250,8 @@ compileFfmpeg(){
       --enable-libx264 \
       --enable-libx265 \
       --enable-nonfree \
+      --enable-libaom \
       --enable-nvenc
-#     --enable-libaom \
     Make install distclean
     hash -r
 }
@@ -263,7 +264,7 @@ compileNasm
 compileYasm
 compileLibX264
 compileLibX265
-# TODO: compileLibAom -- requires cmake-3.5 while centos7 provides cmake-2.8 only
+compileLibAom
 compileLibVpx
 compileLibfdkcc
 compileLibMP3Lame
