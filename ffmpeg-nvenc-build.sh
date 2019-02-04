@@ -32,6 +32,16 @@ Wget() { wget -cN "$@"; }
 
 Make() { make -j$(nproc); make "$@"; }
 
+Clone() {
+    local DIR="$(basename "$1" .git)"
+
+    cd "$WORK_DIR/"
+    test -d "$DIR/.git" || git clone --depth=1 "$@"
+
+    cd "$DIR"
+    git pull
+}
+
 PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
 
 installAptLibs() {
@@ -92,10 +102,7 @@ installCUDASDK() {
 
 installNvidiaSDK() {
     echo "Installing the nVidia NVENC SDK."
-    cd "$WORK_DIR/"
-    test -d nv-codec-headers || git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-    cd nv-codec-headers
-    git pull
+    Clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
     make
     make install PREFIX="$DEST_DIR"
     patch --force -d "$DEST_DIR" -p1 < "$MYDIR/dynlink_cuda.h.patch" ||
@@ -151,10 +158,8 @@ compileLibX265() {
 }
 
 compileLibAom() {
-    cd "$WORK_DIR/"
-    test -d aom/.git || git clone --depth 1 https://aomedia.googlesource.com/aom
-    cd aom
-    git pull
+    echo "Compiling libaom"
+    Clone https://aomedia.googlesource.com/aom
     mkdir ../aom_build
     cd ../aom_build
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED=off -DENABLE_NASM=on ../aom
@@ -195,10 +200,7 @@ compileLibOpus() {
 
 compileLibVpx() {
     echo "Compiling libvpx"
-    cd "$WORK_DIR/"
-    test -d libvpx || git clone https://chromium.googlesource.com/webm/libvpx
-    cd libvpx
-    git pull
+    Clone https://chromium.googlesource.com/webm/libvpx
     ./configure --prefix="$DEST_DIR" --disable-examples --enable-runtime-cpu-detect --enable-vp9 --enable-vp8 \
     --enable-postproc --enable-vp9-postproc --enable-multi-res-encoding --enable-webm-io --enable-better-hw-compatibility \
     --enable-vp9-highbitdepth --enable-onthefly-bitpacking --enable-realtime-only \
@@ -219,10 +221,7 @@ compileLibAss() {
 
 compileFfmpeg(){
     echo "Compiling ffmpeg"
-    cd "$WORK_DIR/"
-    test -d FFmpeg || git clone https://github.com/FFmpeg/FFmpeg -b master
-    cd FFmpeg
-    git pull
+    Clone https://github.com/FFmpeg/FFmpeg -b master
 
     export PATH="$CUDA_DIR/bin:$PATH"  # ..path to nvcc
     PKG_CONFIG_PATH="$DEST_DIR/lib/pkgconfig" \
