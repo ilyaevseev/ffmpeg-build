@@ -30,6 +30,8 @@ MYDIR="$(cd "$(dirname "$0")" && pwd)"  #"
 
 Wget() { wget -cN "$@"; }
 
+Make() { make -j$(nproc); make "$@"; }
+
 PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
 
 installAptLibs() {
@@ -107,8 +109,7 @@ compileNasm() {
     tar xzvf "nasm-$NASM_VERSION.tar.gz"
     cd "nasm-$NASM_VERSION"
     ./configure --prefix="$DEST_DIR" --bindir="$DEST_DIR/bin"
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileYasm() {
@@ -118,8 +119,7 @@ compileYasm() {
     tar xzvf "yasm-$YASM_VERSION.tar.gz"
     cd "yasm-$YASM_VERSION/"
     ./configure --prefix="$DEST_DIR" --bindir="$DEST_DIR/bin"
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileLibX264() {
@@ -130,8 +130,7 @@ compileLibX264() {
     tar xjvf last_x264.tar.bz2
     cd x264-snapshot*
     ./configure --prefix="$DEST_DIR" --bindir="$DEST_DIR/bin" --enable-static --enable-pic
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileLibX265() {
@@ -145,8 +144,7 @@ compileLibX265() {
 
     cd "$WORK_DIR/x265/build/linux/"
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED:bool=off ../../source
-    make -j$(nproc)
-    make install
+    Make install
 
     # forward declaration should not be used without struct keyword!
     sed -i.orig -e 's,^ *x265_param\* zoneParam,struct x265_param* zoneParam,' "$DEST_DIR/include/x265.h"
@@ -160,8 +158,7 @@ compileLibAom() {
     mkdir ../aom_build
     cd ../aom_build
     cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED=off -DENABLE_NASM=on ../aom
-    make -j$(nproc)
-    make install
+    Make install
 }
 
 compileLibfdkcc() {
@@ -172,8 +169,7 @@ compileLibfdkcc() {
     cd mstorsjo-fdk-aac*
     autoreconf -fiv
     ./configure --prefix="$DEST_DIR" --disable-shared
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileLibMP3Lame() {
@@ -183,8 +179,7 @@ compileLibMP3Lame() {
     tar xzvf "lame-$LAME_VERSION.tar.gz"
     cd "lame-$LAME_VERSION"
     ./configure --prefix="$DEST_DIR" --enable-nasm --disable-shared
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileLibOpus() {
@@ -195,8 +190,7 @@ compileLibOpus() {
     cd "opus-$OPUS_VERSION"
     #./autogen.sh
     ./configure --prefix="$DEST_DIR" --disable-shared
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileLibVpx() {
@@ -209,8 +203,7 @@ compileLibVpx() {
     --enable-postproc --enable-vp9-postproc --enable-multi-res-encoding --enable-webm-io --enable-better-hw-compatibility \
     --enable-vp9-highbitdepth --enable-onthefly-bitpacking --enable-realtime-only \
     --cpu=native --as=nasm --disable-docs
-    make -j$(nproc)
-    make install clean
+    Make install clean
 }
 
 compileLibAss() {
@@ -221,8 +214,7 @@ compileLibAss() {
     cd "libass-$LASS_VERSION"
     autoreconf -fiv
     ./configure --prefix="$DEST_DIR" --disable-shared
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
 }
 
 compileFfmpeg(){
@@ -260,8 +252,7 @@ compileFfmpeg(){
       --enable-nonfree \
       --enable-nvenc
 #     --enable-libaom \
-    make -j$(nproc)
-    make install distclean
+    Make install distclean
     hash -r
 }
 
