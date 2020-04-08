@@ -42,7 +42,7 @@ Clone() {
     git pull
 }
 
-PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial cmake3"
+PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial cmake"
 
 installAptLibs() {
     sudo apt-get update
@@ -132,9 +132,9 @@ compileYasm() {
 compileLibX264() {
     echo "Compiling libx264"
     cd "$WORK_DIR/"
-    Wget http://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
+    Wget https://download.videolan.org/pub/x264/snapshots/x264-snapshot-20191216-2245.tar.bz2
     rm -rf x264-snapshot*/ || :
-    tar xjvf last_x264.tar.bz2
+    tar xjvf x264-snapshot-20191216-2245.tar.bz2
     cd x264-snapshot*
     ./configure --prefix="$DEST_DIR" --bindir="$DEST_DIR/bin" --enable-static --enable-pic
     Make install distclean
@@ -162,7 +162,7 @@ compileLibAom() {
     Clone https://aomedia.googlesource.com/aom
     mkdir ../aom_build
     cd ../aom_build
-    which cmake3 && PROG=cmake3 || PROG=cmake
+    which cmake && PROG=cmake || PROG=cmake
     $PROG -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$DEST_DIR" -DENABLE_SHARED=off -DENABLE_NASM=on ../aom
     Make install
 }
