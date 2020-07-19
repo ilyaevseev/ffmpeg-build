@@ -42,7 +42,7 @@ Clone() {
     git pull
 }
 
-PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial cmake3"
+PKGS="autoconf automake libtool patch make cmake bzip2 unzip wget git mercurial"
 
 installAptLibs() {
     sudo apt-get update
@@ -54,7 +54,7 @@ installAptLibs() {
 
 installYumLibs() {
     sudo yum -y install $PKGS freetype-devel gcc gcc-c++ pkgconfig zlib-devel \
-      libtheora-devel libvorbis-devel libva-devel
+      libtheora-devel libvorbis-devel libva-devel cmake3
 }
 
 installLibs() {
