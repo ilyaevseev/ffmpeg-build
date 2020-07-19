@@ -132,10 +132,10 @@ compileYasm() {
 compileLibX264() {
     echo "Compiling libx264"
     cd "$WORK_DIR/"
-    Wget http://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
-    rm -rf x264-snapshot*/ || :
-    tar xjvf last_x264.tar.bz2
-    cd x264-snapshot*
+    Wget https://code.videolan.org/videolan/x264/-/archive/master/x264-master.tar.bz2
+    rm -rf x264-*/ || :
+    tar xjvf x264-master.tar.bz2
+    cd x264-master/
     ./configure --prefix="$DEST_DIR" --bindir="$DEST_DIR/bin" --enable-static --enable-pic
     Make install distclean
 }
