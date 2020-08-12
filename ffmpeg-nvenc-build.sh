@@ -9,12 +9,13 @@
 
 
 # Globals
-NASM_VERSION="2.14rc15"
+NASM_VERSION="2.15.03"
 YASM_VERSION="1.3.0"
 LAME_VERSION="3.100"
-OPUS_VERSION="1.2.1"
+OPUS_VERSION="1.3.1"
 LASS_VERSION="0.14.0"
-CUDA_VERSION="10.0.130-1"
+CUDA_VERSION="10.1.243-1"
+CUDA_RPM_VER="-10-1"
 CUDA_REPO_KEY="http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub"
 CUDA_DIR="/usr/local/cuda"
 WORK_DIR="$HOME/ffmpeg-build-static-sources"
@@ -83,7 +84,7 @@ installCUDASDKdeb() {
 installCUDASDKyum() {
     rpm -q cuda-repo-rhel7 2>/dev/null ||
        sudo yum install -y "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-${CUDA_VERSION}.x86_64.rpm"
-    sudo yum install -y cuda
+    sudo yum install -y "cuda${CUDA_RPM_VER}"
 }
 
 installCUDASDK() {
