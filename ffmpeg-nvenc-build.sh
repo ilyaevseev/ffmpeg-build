@@ -147,7 +147,7 @@ compileLibX265() {
         hg update
     else
         cd "$WORK_DIR/"
-        hg clone https://bitbucket.org/multicoreware/x265
+        hg clone http://hg.videolan.org/x265
     fi
 
     cd "$WORK_DIR/x265/build/linux/"
