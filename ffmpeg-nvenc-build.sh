@@ -142,7 +142,7 @@ compileLibX264() {
 }
 
 compileLibX265() {
-    if cd "$WORK_DIR/x265/"; then
+    if cd "$WORK_DIR/x265/" 2>/dev/null; then
         hg pull
         hg update
     else
